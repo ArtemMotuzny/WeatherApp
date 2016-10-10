@@ -5,23 +5,22 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.util.TimeUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.artemmotuzny.weatherapp.model.MyWeather;
 import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,9 +32,10 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private double lat;
-    private double lon;
+    private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
 
+
+    private LocationService service;
     private ImageView view;
     private TextView info;
 
@@ -43,16 +43,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
-        getLocation();
+        myCheckPermission();
+    }
+
+    private void myCheckPermission() {
+        int locationPermission = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
+        if(locationPermission != PackageManager.PERMISSION_GRANTED){
+            if(Build.VERSION.SDK_INT>=23){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSION_REQUEST_LOCATION);
+            }else {
+                initView();
+            }
+        }else {
+            initView();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case MY_PERMISSION_REQUEST_LOCATION:
+                if(grantResults.length==0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                    showToast("Для работы приложения необходимо разрешение на определение местопложения");
+                    finish();
+                }else {
+                    initView();
+                }
+        }
     }
 
     private void initView() {
+        service = new LocationService(this);
         view = (ImageView) findViewById(R.id.icon);
         info = (TextView) findViewById(R.id.info);
     }
 
-    private void getWeather() {
+    private void getWeather(double lat, double lon) {
         WeatherApi weatherApi = RetrofitUtils.getApi();
 
 
@@ -85,48 +111,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getLocation() {
-        final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            showToast("Для работы приложения необходимо разрешение на определение местопложения");
-            finish();
-            return;
+        if(service==null){
+            service = new LocationService(this);
         }
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                setLocation(location);
-                getWeather();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-            }
-        };
-
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            showToast("Для работы приложения необходимо разрешение на определение местопложения");
-            finish();
+        if(service.isCanProvideLocation()){
+            setLocation(service.getLocation());
+        }else {
+            showToast("Включите gps");
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getLocation();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        service.stopProvide();
+        service = null;
     }
 
     private void setLocation(Location location) {
-        lat = location.getLatitude();
-        lon = location.getLongitude();
+        getWeather(location.getLatitude(),location.getLongitude());
     }
+
+
 
 
     private void showToast(String msg) {
