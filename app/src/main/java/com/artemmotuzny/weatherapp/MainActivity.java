@@ -28,10 +28,7 @@ import retrofit2.Response;
  * Created by tema_ on 10.10.2016.
  */
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
-
+public class MainActivity extends AppCompatActivity{
 
     private LocationService service;
     private ImageView view;
@@ -41,31 +38,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myCheckPermission();
-    }
-
-    private void myCheckPermission() {
-        int locationPermission = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
-        if(locationPermission != PackageManager.PERMISSION_GRANTED){
-            if(Build.VERSION.SDK_INT>=23){
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSION_REQUEST_LOCATION);
-            }else {
-                initView();
-            }
-        }else {
-            initView();
-        }
+        initView();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case MY_PERMISSION_REQUEST_LOCATION:
+            case 1:
                 if(grantResults.length==0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
                     showToast(getString(R.string.error_permission));
                     finish();
                 }else {
-                    initView();
+                    getLocation();
                 }
         }
     }
@@ -108,13 +92,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getLocation() {
-        if(service==null){service = new LocationService(this);}
+        if(service == null){service = new LocationService(this);}
+
         if(service.isCanProvideLocation()){
-            setLocation(service.getLocation());
+            Location location = service.getLocation();
+            if(location !=null){
+                setLocation(location);
+            }
         }else {
             showToast(getString(R.string.input_error));
         }
-
     }
 
     @Override
@@ -133,9 +120,6 @@ public class MainActivity extends AppCompatActivity {
     private void setLocation(Location location) {
         getWeather(location.getLatitude(),location.getLongitude());
     }
-
-
-
 
     private void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
