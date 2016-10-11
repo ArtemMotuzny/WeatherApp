@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="error_permission">Для работы приложения необходимо разрешение на определение местопложения</string>
+    <string name="lang_value">ru</string>
+    <string name="unit_value">metric</string>
+    <string name="input_error">Включите gps и доступ к интернету</string>
+    <string name="png">.png</string>
+    <string name="appid">2965ec27c300785c3762e69c1a813936</string>
+    <string name="icon_path">http://openweathermap.org/img/w/</string>
+
 </resources>

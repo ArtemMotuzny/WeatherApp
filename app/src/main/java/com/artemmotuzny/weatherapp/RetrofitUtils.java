@@ -12,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtils {
     private static final String BASE_URL = "http://api.openweathermap.org";
-    public static final String ICON_URL ="http://openweathermap.org/img/w/";
-    public static final String APP_ID = "2965ec27c300785c3762e69c1a813936";
     private static WeatherApi weatherApi;
 
     public static WeatherApi getApi(){

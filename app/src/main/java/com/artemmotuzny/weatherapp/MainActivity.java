@@ -3,8 +3,6 @@ package com.artemmotuzny.weatherapp;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode){
             case MY_PERMISSION_REQUEST_LOCATION:
                 if(grantResults.length==0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                    showToast("Для работы приложения необходимо разрешение на определение местопложения");
+                    showToast(getString(R.string.error_permission));
                     finish();
                 }else {
                     initView();
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        service = new LocationService(this);
         view = (ImageView) findViewById(R.id.icon);
         info = (TextView) findViewById(R.id.info);
     }
@@ -85,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
         Map<String, String> locMap = new HashMap<>();
         locMap.put("lat", String.valueOf(lat));
         locMap.put("lon", String.valueOf(lon));
-        locMap.put("appid", RetrofitUtils.APP_ID);
-        locMap.put("units", "metric");
-        locMap.put("lang", "ru");
+        locMap.put("appid", getString(R.string.appid));
+        locMap.put("units", getString(R.string.unit_value));
+        locMap.put("lang", getString(R.string.lang_value));
 
         Call<MyWeather> call = weatherApi.getWeatherByLocation(locMap);
         call.enqueue(new Callback<MyWeather>() {
@@ -105,19 +102,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setData(MyWeather weather) {
-        String imagePath = RetrofitUtils.ICON_URL + weather.getWeather().get(0).getIcon() + ".png";
+        String imagePath = getString(R.string.icon_path) + weather.getWeather().get(0).getIcon() + getString(R.string.png);
         Glide.with(this).load(imagePath).into(view);
         info.setText(weather.toString());
     }
 
     private void getLocation() {
-        if(service==null){
-            service = new LocationService(this);
-        }
+        if(service==null){service = new LocationService(this);}
         if(service.isCanProvideLocation()){
             setLocation(service.getLocation());
         }else {
-            showToast("Включите gps");
+            showToast(getString(R.string.input_error));
         }
 
     }
