@@ -200,7 +200,7 @@ public class MyWeather {
     @Override
     public String toString() {
         return (sys.getCountry() + " " + name + "\n") +
-                "Темпиратура - " + main.getTemp().intValue()+ "\n" +
+                "Температура - " + main.getTemp().intValue()+ "\n" +
                 weather.get(0).getDescription() + "\n" +
                 "Облачность - " + clouds.getAll() + "%\n";
     }

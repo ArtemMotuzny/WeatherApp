@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity{
     public void getLocationPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             myCheckPermission();
+        }else {
+            permissionCheck = true;
         }
     }
 }
