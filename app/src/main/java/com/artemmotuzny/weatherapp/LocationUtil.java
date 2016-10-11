@@ -45,13 +45,13 @@ public class LocationUtil implements LocationListener {
             }
             if (networkProvide) {
 
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TIME_HOUR, DISTANCE, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 1, this);
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             }
             if (gpsProvide) {
                 if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_HOUR, DISTANCE, this);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, this);
                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 }
             }
@@ -60,7 +60,7 @@ public class LocationUtil implements LocationListener {
     }
 
     //Проверка доступности провейдеров
-    boolean isCanProvideLocation() {
+    private boolean isCanProvideLocation() {
         gpsProvide = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         networkProvide = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         return !(!gpsProvide && !networkProvide);
@@ -85,7 +85,6 @@ public class LocationUtil implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override

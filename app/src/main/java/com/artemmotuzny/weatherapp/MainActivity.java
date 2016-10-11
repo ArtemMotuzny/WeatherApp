@@ -32,7 +32,7 @@ import retrofit2.Response;
  * Created by tema_ on 10.10.2016.
  */
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private static final int REQ_PER_CODE = 101;
 
     private LocationUtil locationUtil;
@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity{
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void myCheckPermission() {
-        int perm = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
-        if(perm != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQ_PER_CODE);
-        }else {
+        int perm = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (perm != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PER_CODE);
+        } else {
             permissionCheck = true;
         }
     }
@@ -61,12 +61,12 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQ_PER_CODE:
-                if(grantResults.length==0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     showToast(getString(R.string.error_permission));
                     finish();
-                }else {
+                } else {
                     permissionCheck = true;
                     getLocation();
                 }
@@ -111,12 +111,16 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void getLocation() {
-        if(!permissionCheck){return;}
-        if (locationUtil == null){locationUtil = new LocationUtil(this);}
+        if (!permissionCheck) {
+            return;
+        }
+        if (locationUtil == null) {
+            locationUtil = new LocationUtil(this);
+        }
         Location location = locationUtil.getLocation();
-        if(location !=null){
+        if (location != null) {
             setLocation(location);
-        }else {
+        } else {
             showToast(getString(R.string.input_error));
         }
     }
@@ -132,14 +136,14 @@ public class MainActivity extends AppCompatActivity{
     protected void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-        if(locationUtil !=null){
+        if (locationUtil != null) {
             locationUtil.stopProvide();
             locationUtil = null;
         }
     }
 
     private void setLocation(Location location) {
-        getWeather(location.getLatitude(),location.getLongitude());
+        getWeather(location.getLatitude(), location.getLongitude());
     }
 
     private void showToast(String msg) {
@@ -147,19 +151,19 @@ public class MainActivity extends AppCompatActivity{
     }
 
     @Subscribe
-    public void onUpdateLocationEvent(UpdateLocationEvent event){
-        getWeather(event.getLocation().getLatitude(),event.getLocation().getLongitude());
+    public void onUpdateLocationEvent(UpdateLocationEvent event) {
+        getWeather(event.getLocation().getLatitude(), event.getLocation().getLongitude());
     }
 
     @Subscribe
-    public void onPermissionEvent(PermissionEvent event){
+    public void onPermissionEvent(PermissionEvent event) {
         getLocationPermission();
     }
 
-    public void getLocationPermission(){
+    public void getLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             myCheckPermission();
-        }else {
+        } else {
             permissionCheck = true;
         }
     }
