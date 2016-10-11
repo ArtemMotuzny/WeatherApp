@@ -1,58 +1,57 @@
 package com.artemmotuzny.weatherapp;
 
 import android.Manifest;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by tema_ on 10.10.2016.
  */
 
-public class LocationService extends Service implements LocationListener {
-    private static final int MY_PERMISSION_REQUEST_LOCATION = 1;
-    private Context context;
-    private boolean isCanProvideLocation = false;
+public class LocationUtil implements LocationListener {
+
+    //дистанция в метрах - 1 км
+    private static final int DISTANCE = 1000;
+    //Время в милисикундах - 1 час
+    private static final int TIME_HOUR = 3600000;
+
+
     private boolean networkProvide = false;
     private boolean gpsProvide = false;
-    private Location location;
     private LocationManager locationManager;
+    private Context context;
 
-    public LocationService(Context context) {
+    LocationUtil(Context context) {
         this.context = context;
-        location = getNewLocation();
+        locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
     }
 
-    private Location getNewLocation() {
-        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        int locationPermission = ContextCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION);
-        if(locationPermission != PackageManager.PERMISSION_GRANTED){
-            if(Build.VERSION.SDK_INT>=23){
-                ((MainActivity)context).requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSION_REQUEST_LOCATION);
+    //Получаем новую локацию
+    Location getLocation() {
+        Location location = null;
+        if (isCanProvideLocation()) {
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                EventBus.getDefault().post(new PermissionEvent(context.getString(R.string.event_check)));
+                return null;
             }
-            return null;
-        }
-
-
-        if (isCanProvideLocation()){
-            isCanProvideLocation = true;
             if (networkProvide) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this);
+
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TIME_HOUR, DISTANCE, this);
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
             }
             if (gpsProvide) {
                 if (location == null) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_HOUR, DISTANCE, this);
                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 }
             }
@@ -60,17 +59,15 @@ public class LocationService extends Service implements LocationListener {
         return location;
     }
 
-    public Location getLocation() {
-        return this.location;
-    }
-
-    public boolean isCanProvideLocation() {
+    //Проверка доступности провейдеров
+    boolean isCanProvideLocation() {
         gpsProvide = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         networkProvide = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         return !(!gpsProvide && !networkProvide);
     }
 
-    public void stopProvide() {
+    //удаляем слушатель
+    void stopProvide() {
         if(locationManager!=null){
             int locationPermission = ContextCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION);
             if(locationPermission == PackageManager.PERMISSION_GRANTED){
@@ -80,15 +77,10 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
+    //При изминении координат будет отправляться сообщение об этом
     @Override
     public void onLocationChanged(Location location) {
-
+        EventBus.getDefault().post(new UpdateLocationEvent(location));
     }
 
     @Override

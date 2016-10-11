@@ -202,6 +202,6 @@ public class MyWeather {
         return (sys.getCountry() + " " + name + "\n") +
                 "Темпиратура - " + main.getTemp().intValue()+ "\n" +
                 weather.get(0).getDescription() + "\n" +
-                "Облачность - " + clouds.getAll() + "\n";
+                "Облачность - " + clouds.getAll() + "%\n";
     }
 }

@@ -7,5 +7,7 @@
     <string name="png">.png</string>
     <string name="appid">2965ec27c300785c3762e69c1a813936</string>
     <string name="icon_path">http://openweathermap.org/img/w/</string>
+    <string name="event_check">check</string>
+    <string name="event_update">update</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +17,9 @@ import android.widget.Toast;
 
 import com.artemmotuzny.weatherapp.model.MyWeather;
 import com.bumptech.glide.Glide;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,26 +33,41 @@ import retrofit2.Response;
  */
 
 public class MainActivity extends AppCompatActivity{
+    private static final int REQ_PER_CODE = 101;
 
-    private LocationService service;
+    private LocationUtil locationUtil;
     private ImageView view;
     private TextView info;
+    private boolean permissionCheck = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getLocationPermission();
         initView();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void myCheckPermission() {
+        int perm = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
+        if(perm != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQ_PER_CODE);
+        }else {
+            permissionCheck = true;
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case 1:
+            case REQ_PER_CODE:
                 if(grantResults.length==0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
                     showToast(getString(R.string.error_permission));
                     finish();
                 }else {
+                    permissionCheck = true;
                     getLocation();
                 }
         }
@@ -92,13 +111,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void getLocation() {
-        if(service == null){service = new LocationService(this);}
-
-        if(service.isCanProvideLocation()){
-            Location location = service.getLocation();
-            if(location !=null){
-                setLocation(location);
-            }
+        if(!permissionCheck){return;}
+        if (locationUtil == null){locationUtil = new LocationUtil(this);}
+        Location location = locationUtil.getLocation();
+        if(location !=null){
+            setLocation(location);
         }else {
             showToast(getString(R.string.input_error));
         }
@@ -107,14 +124,18 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
         getLocation();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        service.stopProvide();
-        service = null;
+        EventBus.getDefault().unregister(this);
+        if(locationUtil !=null){
+            locationUtil.stopProvide();
+            locationUtil = null;
+        }
     }
 
     private void setLocation(Location location) {
@@ -123,5 +144,21 @@ public class MainActivity extends AppCompatActivity{
 
     private void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void onUpdateLocationEvent(UpdateLocationEvent event){
+        getWeather(event.getLocation().getLatitude(),event.getLocation().getLongitude());
+    }
+
+    @Subscribe
+    public void onPermissionEvent(PermissionEvent event){
+        getLocationPermission();
+    }
+
+    public void getLocationPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            myCheckPermission();
+        }
     }
 }
