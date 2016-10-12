@@ -1,25 +1,19 @@
 
-package com.artemmotuzny.weatherapp.model;
+package com.artemmotuzny.weatherapp.data.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Main {
 
     @SerializedName("temp")
-    @Expose
     private Double temp;
     @SerializedName("humidity")
-    @Expose
     private Integer humidity;
     @SerializedName("pressure")
-    @Expose
     private Double pressure;
     @SerializedName("temp_min")
-    @Expose
     private Double tempMin;
     @SerializedName("temp_max")
-    @Expose
     private Double tempMax;
 
     /**

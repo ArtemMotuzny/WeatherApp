@@ -1,4 +1,4 @@
-package com.artemmotuzny.weatherapp;
+package com.artemmotuzny.weatherapp.event;
 
 /**
  * Created by tema_ on 11.10.2016.

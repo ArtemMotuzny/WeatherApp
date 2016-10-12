@@ -1,19 +1,15 @@
 
-package com.artemmotuzny.weatherapp.model;
+package com.artemmotuzny.weatherapp.data.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Sys {
 
     @SerializedName("country")
-    @Expose
     private String country;
     @SerializedName("sunrise")
-    @Expose
     private Integer sunrise;
     @SerializedName("sunset")
-    @Expose
     private Integer sunset;
 
     /**

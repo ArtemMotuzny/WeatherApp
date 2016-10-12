@@ -9,5 +9,6 @@
     <string name="icon_path">http://openweathermap.org/img/w/</string>
     <string name="event_check">check</string>
     <string name="event_update">update</string>
+    <string name="weather_fragment_tag">WeatherFragmenr</string>
 
 </resources>
