@@ -45,7 +45,7 @@ public class WeatherPresenter implements WeatherContract.Presenter{
                         if(e instanceof NullPointerException){
                             view.setErrorText();
                         }else {
-                            view.setErrorText(e.getCause().getMessage());
+                            view.setErrorText(e.getMessage());
                         }
 
                     }
