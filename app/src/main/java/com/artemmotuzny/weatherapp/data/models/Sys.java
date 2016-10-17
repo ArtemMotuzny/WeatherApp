@@ -1,5 +1,5 @@
 
-package com.artemmotuzny.weatherapp.data.model;
+package com.artemmotuzny.weatherapp.data.models;
 
 import com.google.gson.annotations.SerializedName;
 

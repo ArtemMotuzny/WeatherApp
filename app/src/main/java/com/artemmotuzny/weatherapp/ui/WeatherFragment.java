@@ -1,5 +1,6 @@
 package com.artemmotuzny.weatherapp.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,12 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     private WeatherContract.Presenter presenter;
     private TextView info;
     private ImageView icon;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
@@ -58,7 +65,7 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     }
 
     @Override
-    public void setIcon(String pathToIcon) {
-        Glide.with(getContext()).load(getString(R.string.icon_path)+pathToIcon+getString(R.string.png)).into(icon);
+    public void setIcon(Bitmap pathToIcon) {
+        icon.setImageBitmap(pathToIcon);
     }
 }

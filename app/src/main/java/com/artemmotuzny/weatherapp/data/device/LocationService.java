@@ -38,10 +38,10 @@ public class LocationService implements LocationApi {
     private void providerType() {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (isCanProvideLocation()) {
-            if (gpsProvide ) {
+            if (gpsProvide) {
                 typeProvider = LocationManager.GPS_PROVIDER;
             }
-            if (networkProvide && typeProvider.isEmpty()) {
+            if (networkProvide&& typeProvider.isEmpty()) {
                 typeProvider = LocationManager.NETWORK_PROVIDER;
             }
         }
@@ -59,7 +59,9 @@ public class LocationService implements LocationApi {
         return Observable.create(new Observable.OnSubscribe<Location>() {
             @Override
             public void call(final Subscriber<? super Location> subscriber) {
-                if(!isCanProvideLocation()){subscriber.onError(new Throwable("Включите gps и network"));}
+                if (!isCanProvideLocation()) {
+                    subscriber.onError(new Throwable("Включите gps"));
+                }
                 LocationListener locationListener = new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
@@ -88,16 +90,16 @@ public class LocationService implements LocationApi {
                 }
 
                 //Without looper prepare we have error(can't create handler inside thread that has not called looper.prepare())
-                //
                 Looper.prepare();
-                locationManager.requestLocationUpdates(typeProvider, 1, 1, locationListener,Looper.myLooper());
+                locationManager.requestLocationUpdates(typeProvider, 30000, 20, locationListener, Looper.myLooper());
                 Location location = locationManager.getLastKnownLocation(typeProvider);
-                if(location==null){
+                if (location == null) {
                     subscriber.onError(new Throwable("Локация не доступна"));
                     return;
                 }
                 subscriber.onNext(location);
                 Looper.loop();
+
             }
         });
     }

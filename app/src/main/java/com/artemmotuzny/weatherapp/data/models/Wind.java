@@ -1,5 +1,5 @@
 
-package com.artemmotuzny.weatherapp.data.model;
+package com.artemmotuzny.weatherapp.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +8,7 @@ public class Wind {
     @SerializedName("speed")
     private Double speed;
     @SerializedName("deg")
-    private Double deg;
+    private Double degrees;
 
     /**
      * 
@@ -31,19 +31,19 @@ public class Wind {
     /**
      * 
      * @return
-     *     The deg
+     *     The degrees
      */
-    public Double getDeg() {
-        return deg;
+    public Double getDegrees() {
+        return degrees;
     }
 
     /**
      * 
-     * @param deg
-     *     The deg
+     * @param degrees
+     *     The degrees
      */
-    public void setDeg(Double deg) {
-        this.deg = deg;
+    public void setDegrees(Double degrees) {
+        this.degrees = degrees;
     }
 
 }

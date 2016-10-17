@@ -11,7 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.artemmotuzny.weatherapp.R;
+import com.artemmotuzny.weatherapp.data.WeatherRepositoryImpl;
 import com.artemmotuzny.weatherapp.data.device.LocationService;
+import com.artemmotuzny.weatherapp.data.device.NetworkConnectService;
+import com.artemmotuzny.weatherapp.data.local.DataBase;
 import com.artemmotuzny.weatherapp.data.remote.RetrofitService;
 import com.artemmotuzny.weatherapp.event.PermissionEvent;
 import com.artemmotuzny.weatherapp.presenter.WeatherPresenter;
@@ -33,7 +36,6 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         myCheckPermission();
-
     }
 
 
@@ -67,7 +69,8 @@ public class WeatherActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().add(R.id.container,weatherFragment,getString(R.string.weather_fragment_tag)).commit();
 
-        new WeatherPresenter(new LocationService(this), RetrofitService.getApi(),weatherFragment);
+        new WeatherPresenter(weatherFragment,new WeatherRepositoryImpl(new LocationService(this)
+                ,RetrofitService.getApi(),new DataBase(this),new NetworkConnectService(this)));
     }
 
 

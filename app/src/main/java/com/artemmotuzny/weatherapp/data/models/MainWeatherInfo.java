@@ -1,9 +1,9 @@
 
-package com.artemmotuzny.weatherapp.data.model;
+package com.artemmotuzny.weatherapp.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Main {
+public class MainWeatherInfo {
 
     @SerializedName("temp")
     private Double temp;

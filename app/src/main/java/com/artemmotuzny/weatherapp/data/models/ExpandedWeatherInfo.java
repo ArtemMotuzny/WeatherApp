@@ -1,9 +1,12 @@
 
-package com.artemmotuzny.weatherapp.data.model;
+package com.artemmotuzny.weatherapp.data.models;
 
+import android.graphics.Bitmap;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Weather {
+public class ExpandedWeatherInfo {
 
     @SerializedName("id")
     private Integer id;
@@ -13,6 +16,11 @@ public class Weather {
     private String description;
     @SerializedName("icon")
     private String icon;
+
+    @Expose
+    private Bitmap bitmapIcon;
+
+
 
     /**
      * 
@@ -86,4 +94,11 @@ public class Weather {
         this.icon = icon;
     }
 
+    public Bitmap getBitmapIcon() {
+        return bitmapIcon;
+    }
+
+    public void setBitmapIcon(Bitmap bitmapIcon) {
+        this.bitmapIcon = bitmapIcon;
+    }
 }

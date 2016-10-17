@@ -1,21 +1,21 @@
 
-package com.artemmotuzny.weatherapp.data.model;
+package com.artemmotuzny.weatherapp.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyWeather {
+public class Weather {
 
     @SerializedName("coord")
-    private Coord coord;
+    private Coordinates coord;
     @SerializedName("sys")
     private Sys sys;
     @SerializedName("weather")
-    private List<Weather> weather = new ArrayList<Weather>();
+    private List<ExpandedWeatherInfo> expandedWeatherInfo = new ArrayList<ExpandedWeatherInfo>();
     @SerializedName("main")
-    private Main main;
+    private MainWeatherInfo mainWeatherInfo;
     @SerializedName("wind")
     private Wind wind;
     @SerializedName("rain")
@@ -23,7 +23,7 @@ public class MyWeather {
     @SerializedName("clouds")
     private Clouds clouds;
     @SerializedName("dt")
-    private Integer dt;
+    private Integer data;
     @SerializedName("id")
     private Integer id;
     @SerializedName("name")
@@ -34,15 +34,15 @@ public class MyWeather {
     /**
      * @return The coord
      */
-    public Coord getCoord() {
+    public Coordinates getCoord() {
         return coord;
     }
 
     /**
-     * @param coord The coord
+     * @param coordinates The coordinates
      */
-    public void setCoord(Coord coord) {
-        this.coord = coord;
+    public void setCoord(Coordinates coordinates) {
+        this.coord = coordinates;
     }
 
     /**
@@ -60,31 +60,31 @@ public class MyWeather {
     }
 
     /**
-     * @return The weather
+     * @return The expandedWeatherInfo
      */
-    public List<Weather> getWeather() {
-        return weather;
+    public List<ExpandedWeatherInfo> getExpandedWeatherInfo() {
+        return expandedWeatherInfo;
     }
 
     /**
-     * @param weather The weather
+     * @param expandedWeatherInfo The expandedWeatherInfo
      */
-    public void setWeather(List<Weather> weather) {
-        this.weather = weather;
+    public void setExpandedWeatherInfo(List<ExpandedWeatherInfo> expandedWeatherInfo) {
+        this.expandedWeatherInfo = expandedWeatherInfo;
     }
 
     /**
-     * @return The main
+     * @return The mainWeatherInfo
      */
-    public Main getMain() {
-        return main;
+    public MainWeatherInfo getMainWeatherInfo() {
+        return mainWeatherInfo;
     }
 
     /**
-     * @param main The main
+     * @param mainWeatherInfo The mainWeatherInfo
      */
-    public void setMain(Main main) {
-        this.main = main;
+    public void setMainWeatherInfo(MainWeatherInfo mainWeatherInfo) {
+        this.mainWeatherInfo = mainWeatherInfo;
     }
 
     /**
@@ -130,17 +130,17 @@ public class MyWeather {
     }
 
     /**
-     * @return The dt
+     * @return The data
      */
-    public Integer getDt() {
-        return dt;
+    public Integer getData() {
+        return data;
     }
 
     /**
-     * @param dt The dt
+     * @param data The data
      */
-    public void setDt(Integer dt) {
-        this.dt = dt;
+    public void setData(Integer data) {
+        this.data = data;
     }
 
     /**
@@ -183,13 +183,5 @@ public class MyWeather {
      */
     public void setCod(Integer cod) {
         this.cod = cod;
-    }
-
-    @Override
-    public String toString() {
-        return (sys.getCountry() + " " + name + "\n") +
-                "Температура - " + main.getTemp().intValue()+ "\n" +
-                weather.get(0).getDescription() + "\n" +
-                "Облачность - " + clouds.getAll() + "%\n";
     }
 }

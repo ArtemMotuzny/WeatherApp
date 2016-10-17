@@ -1,6 +1,7 @@
 package com.artemmotuzny.weatherapp.contract;
 
-import com.artemmotuzny.weatherapp.data.model.Weather;
+import android.graphics.Bitmap;
+
 import com.artemmotuzny.weatherapp.presenter.WeatherPresenter;
 
 /**
@@ -13,7 +14,7 @@ public class WeatherContract {
 
         void setWeatherText(String weather);
 
-        void setIcon(String pathToIcon);
+        void setIcon(Bitmap pathToIcon);
     }
 
     public interface Presenter{

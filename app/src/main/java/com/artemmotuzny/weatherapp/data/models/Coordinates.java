@@ -1,9 +1,10 @@
 
-package com.artemmotuzny.weatherapp.data.model;
+package com.artemmotuzny.weatherapp.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Coord {
+public class Coordinates {
+    transient long weatherDataId;
 
     @SerializedName("lon")
     private Double lon;
@@ -26,5 +27,13 @@ public class Coord {
 
     public Double getLat() {
         return lat;
+    }
+
+    public long getWeatherDataId() {
+        return weatherDataId;
+    }
+
+    public void setWeatherDataId(long weatherDataId) {
+        this.weatherDataId = weatherDataId;
     }
 }
