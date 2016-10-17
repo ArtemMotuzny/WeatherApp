@@ -4,7 +4,10 @@ import android.util.Log;
 
 import com.artemmotuzny.weatherapp.contract.WeatherContract;
 import com.artemmotuzny.weatherapp.data.WeatherRepository;
+import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
 import com.artemmotuzny.weatherapp.data.models.Weather;
+
+import java.util.List;
 
 import rx.Observer;
 import rx.Subscription;
@@ -53,7 +56,11 @@ public class WeatherPresenter implements WeatherContract.Presenter{
                     @Override
                     public void onNext(Weather weather) {
                         view.setWeatherText(weather.getSys().getCountry(),weather.getName(),weather.getMainWeatherInfo().getTemp(),weather.getClouds().getCloudiness(),weather.getExpandedWeatherInfo().get(0).getDescription());
-                        view.setIcon(weather.getExpandedWeatherInfo().get(0).getBitmapIcon());
+                        List<ExpandedWeatherInfo> expandedWeatherInfos = weather.getExpandedWeatherInfo();
+                        if(expandedWeatherInfos!=null && !expandedWeatherInfos.isEmpty()){
+                            ExpandedWeatherInfo expandedWeatherInfo = expandedWeatherInfos.get(0);
+                            view.setIcon(expandedWeatherInfo.getBitmapIcon());
+                        }
                     }
                 });
 

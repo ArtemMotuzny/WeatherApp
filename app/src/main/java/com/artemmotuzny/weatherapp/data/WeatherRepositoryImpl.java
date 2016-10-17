@@ -12,6 +12,7 @@ import com.artemmotuzny.weatherapp.data.remote.WeatherApi;
 import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
@@ -61,8 +62,11 @@ public class WeatherRepositoryImpl implements WeatherRepository {
             public void call(Weather weather) {
                 if (connectService.getConnectState()) {
                     //convert icon to base64
-                    ExpandedWeatherInfo expandedWeatherInfo = weather.getExpandedWeatherInfo().get(0);
-                    expandedWeatherInfo.setBitmapIcon(BitmapUtils.getBitmapFromUrl(expandedWeatherInfo.getIcon()));
+                    List<ExpandedWeatherInfo> expandedWeatherInfos = weather.getExpandedWeatherInfo();
+                    if(expandedWeatherInfos!=null && expandedWeatherInfos.size()>0){
+                        ExpandedWeatherInfo expandedWeatherInfo = expandedWeatherInfos.get(0);
+                        expandedWeatherInfo.setBitmapIcon(BitmapUtils.getBitmapFromUrl(expandedWeatherInfo.getIcon()));
+                    }
 
                     //change coordinates received from the server on the local coordinates because we get coordinates nearest town.
                     weather.getCoord().setLat(coordinates.getLatitude());
