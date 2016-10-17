@@ -3,23 +3,17 @@ package com.artemmotuzny.weatherapp.data;
 import android.graphics.Bitmap;
 import android.location.Location;
 
-import com.artemmotuzny.weatherapp.data.device.LocationApi;
-import com.artemmotuzny.weatherapp.data.device.NetworkConnectService;
+import com.artemmotuzny.weatherapp.device_services.NetworkConnectService;
 import com.artemmotuzny.weatherapp.data.local.LocalDataSource;
 import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
 import com.artemmotuzny.weatherapp.data.models.Weather;
 import com.artemmotuzny.weatherapp.data.remote.RemoteDataSource;
-import com.artemmotuzny.weatherapp.data.remote.RetrofitService;
-import com.artemmotuzny.weatherapp.data.remote.WeatherApi;
 import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by tema_ on 13.10.2016.

@@ -4,14 +4,12 @@ import android.content.Context;
 
 import com.artemmotuzny.weatherapp.data.WeatherRepository;
 import com.artemmotuzny.weatherapp.data.WeatherRepositoryImpl;
-import com.artemmotuzny.weatherapp.data.device.LocationApi;
-import com.artemmotuzny.weatherapp.data.device.LocationService;
-import com.artemmotuzny.weatherapp.data.device.NetworkConnectService;
+import com.artemmotuzny.weatherapp.device_services.LocationApi;
+import com.artemmotuzny.weatherapp.device_services.LocationService;
+import com.artemmotuzny.weatherapp.device_services.NetworkConnectService;
 import com.artemmotuzny.weatherapp.data.local.LocalDataSource;
 import com.artemmotuzny.weatherapp.data.remote.RemoteDataSource;
 import com.artemmotuzny.weatherapp.data.remote.RetrofitService;
-
-import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;

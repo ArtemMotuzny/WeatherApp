@@ -6,13 +6,12 @@ import android.util.Log;
 
 import com.artemmotuzny.weatherapp.contract.WeatherContract;
 import com.artemmotuzny.weatherapp.data.WeatherRepository;
-import com.artemmotuzny.weatherapp.data.device.LocationApi;
+import com.artemmotuzny.weatherapp.device_services.LocationApi;
 import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
 import com.artemmotuzny.weatherapp.data.models.Weather;
 import com.artemmotuzny.weatherapp.di.DaggerWeatherPresenterComponent;
 import com.artemmotuzny.weatherapp.di.WeatherPresenterModule;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;

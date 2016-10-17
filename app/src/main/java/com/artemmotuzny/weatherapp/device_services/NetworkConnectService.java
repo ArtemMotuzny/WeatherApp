@@ -1,4 +1,4 @@
-package com.artemmotuzny.weatherapp.data.device;
+package com.artemmotuzny.weatherapp.device_services;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

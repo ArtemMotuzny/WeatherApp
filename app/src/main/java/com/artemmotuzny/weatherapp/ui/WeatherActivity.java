@@ -11,11 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.artemmotuzny.weatherapp.R;
-import com.artemmotuzny.weatherapp.data.WeatherRepositoryImpl;
-import com.artemmotuzny.weatherapp.data.device.LocationService;
-import com.artemmotuzny.weatherapp.data.device.NetworkConnectService;
-import com.artemmotuzny.weatherapp.data.local.LocalDataSource;
-import com.artemmotuzny.weatherapp.data.remote.RetrofitService;
 import com.artemmotuzny.weatherapp.event.PermissionEvent;
 import com.artemmotuzny.weatherapp.presenter.WeatherPresenter;
 
