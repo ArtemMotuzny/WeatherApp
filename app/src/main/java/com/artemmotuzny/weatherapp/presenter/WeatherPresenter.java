@@ -37,18 +37,23 @@ public class WeatherPresenter implements WeatherContract.Presenter{
                 .subscribe(new Observer<Weather>() {
                     @Override
                     public void onCompleted() {
-                        Log.d("ASE","ASE");
+                        Log.d("Subscribe - onCompleted","onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        view.setWeatherText(e.toString());
+                        if(e instanceof NullPointerException){
+                            view.setErrorText();
+                        }else {
+                            view.setErrorText(e.getCause().getMessage());
+                        }
+
                     }
 
                     @Override
-                    public void onNext(Weather weatherData) {
-                        view.setWeatherText(weatherData.getName());
-                        view.setIcon(weatherData.getExpandedWeatherInfo().get(0).getBitmapIcon());
+                    public void onNext(Weather weather) {
+                        view.setWeatherText(weather.getSys().getCountry(),weather.getName(),weather.getMainWeatherInfo().getTemp(),weather.getClouds().getCloudiness(),weather.getExpandedWeatherInfo().get(0).getDescription());
+                        view.setIcon(weather.getExpandedWeatherInfo().get(0).getBitmapIcon());
                     }
                 });
 

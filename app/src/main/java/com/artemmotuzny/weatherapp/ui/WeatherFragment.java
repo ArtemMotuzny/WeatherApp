@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.artemmotuzny.weatherapp.R;
 import com.artemmotuzny.weatherapp.contract.WeatherContract;
 import com.artemmotuzny.weatherapp.presenter.WeatherPresenter;
-import com.bumptech.glide.Glide;
 
 /**
  * Created by tema_ on 12.10.2016.
@@ -60,12 +59,24 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     }
 
     @Override
-    public void setWeatherText(String weather) {
-        info.setText(weather);
+    public void setWeatherText(String country, String cityName, Double temp, Integer cloudiness, String description) {
+        info.setText(country+getString(R.string.colon)+cityName
+                +getString(R.string.temp) + temp.intValue() + getString(R.string.coma) + description
+                +getString(R.string.cloudiness)+ cloudiness);
     }
 
     @Override
     public void setIcon(Bitmap pathToIcon) {
         icon.setImageBitmap(pathToIcon);
+    }
+
+    @Override
+    public void setErrorText() {
+        info.setText(getString(R.string.error_data));
+    }
+
+    @Override
+    public void setErrorText(String message) {
+        info.setText(message);
     }
 }

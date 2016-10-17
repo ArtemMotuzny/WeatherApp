@@ -2,23 +2,21 @@ package com.artemmotuzny.weatherapp.data;
 
 import android.location.Location;
 
-import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
-import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 import com.artemmotuzny.weatherapp.data.device.LocationApi;
 import com.artemmotuzny.weatherapp.data.device.NetworkConnectService;
 import com.artemmotuzny.weatherapp.data.local.DataBase;
+import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
 import com.artemmotuzny.weatherapp.data.models.Weather;
 import com.artemmotuzny.weatherapp.data.remote.RetrofitService;
 import com.artemmotuzny.weatherapp.data.remote.WeatherApi;
+import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by tema_ on 13.10.2016.
@@ -43,8 +41,9 @@ public class WeatherRepositoryImpl implements WeatherRepository {
         return locationApi.getLocation().flatMap(new Func1<Location, Observable<Weather>>() {
             @Override
             public Observable<Weather> call(Location location) {
+                Observable<Weather> observable;
                 if (!connectService.getConnectState()) {
-                    return dataBase.getWeatherByLocation(location.getLatitude(),location.getLongitude());
+                    observable =  dataBase.getWeatherByLocation(location.getLatitude(),location.getLongitude());
                 }else {
                     coordinates = location;
                     Map<String, String> qMap = new HashMap<>();
@@ -53,8 +52,9 @@ public class WeatherRepositoryImpl implements WeatherRepository {
                     qMap.put("appid", RetrofitService.APP_ID);
                     qMap.put("lang", "ru");
                     qMap.put("units", "metric");
-                    return weatherApi.getWeatherByLocation(qMap);
+                    observable = weatherApi.getWeatherByLocation(qMap);
                 }
+                return observable;
             }
         }).doOnNext(new Action1<Weather>() {
             @Override

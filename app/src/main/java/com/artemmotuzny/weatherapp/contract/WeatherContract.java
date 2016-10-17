@@ -12,9 +12,13 @@ public class WeatherContract {
     public interface View{
         void setPresenter(WeatherPresenter presenter);
 
-        void setWeatherText(String weather);
+        void setWeatherText(String country, String cityName, Double temp, Integer cloudiness, String description);
 
         void setIcon(Bitmap pathToIcon);
+
+        void setErrorText();
+
+        void setErrorText(String message);
     }
 
     public interface Presenter{

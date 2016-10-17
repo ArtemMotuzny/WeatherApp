@@ -10,14 +10,14 @@ import android.os.Looper;
  */
 
 public class NetworkConnectService {
-    private NetworkInfo networkInfo;
+    private ConnectivityManager connectivityManager;
 
     public NetworkConnectService(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkInfo = connectivityManager.getActiveNetworkInfo();
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     public boolean getConnectState(){
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED;
     }
 }

@@ -40,8 +40,12 @@ public class DataBase {
 
     //get observables
     public Observable<Weather> getWeatherByLocation(double latitude, double longitude) {
+        return getCoordByWeatherDataId(latitude, longitude).doOnError(new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
 
-        return getCoordByWeatherDataId(latitude, longitude).flatMap(new Func1<Coordinates, Observable<Weather>>() {
+            }
+        }).flatMap(new Func1<Coordinates, Observable<Weather>>() {
             @Override
             public Observable<Weather> call(final Coordinates coordinates) {
                 long id = coordinates.getWeatherDataId();
@@ -70,7 +74,7 @@ public class DataBase {
 
     private Observable<Coordinates> getCoordByWeatherDataId(double lat, double lon) {
         String sql = "SELECT * FROM " + DBConstants.CoordinateEntity.TABLE_NAME + " WHERE " + DBConstants.CoordinateEntity.LAT + " = ? AND " + DBConstants.CoordinateEntity.LON + " = ?";
-        return dataBaseHelper.createQuery(DBConstants.CoordinateEntity.TABLE_NAME, sql, String.valueOf(lat), String.valueOf(lon)).mapToOne(Mapper.cursorToCoordinates());
+        return dataBaseHelper.createQuery(DBConstants.CoordinateEntity.TABLE_NAME, sql, String.valueOf(lat), String.valueOf(lon)).mapToOneOrDefault(Mapper.cursorToCoordinates(),null);
     }
 
     //get models
