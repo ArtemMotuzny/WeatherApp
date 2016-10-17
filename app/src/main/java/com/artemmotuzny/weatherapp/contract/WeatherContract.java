@@ -1,5 +1,6 @@
 package com.artemmotuzny.weatherapp.contract;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.artemmotuzny.weatherapp.presenter.WeatherPresenter;
@@ -19,6 +20,8 @@ public class WeatherContract {
         void setErrorText();
 
         void setErrorText(String message);
+
+        Context getViewContext();
     }
 
     public interface Presenter{
@@ -27,5 +30,7 @@ public class WeatherContract {
         void subscribe();
 
         void unsubscribe();
+
+        void inject();
     }
 }

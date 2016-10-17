@@ -37,19 +37,18 @@ public class WeatherPresenter implements WeatherContract.Presenter{
     private WeatherContract.View view;
     private CompositeSubscription compositeSubscription;
 
-    public WeatherPresenter(Context context, WeatherContract.View view) {
-        injectDependencies(context);
-
+    public WeatherPresenter(WeatherContract.View view) {
         this.view = view;
-        compositeSubscription = new CompositeSubscription();
         view.setPresenter(this);
+
+        compositeSubscription = new CompositeSubscription();
     }
 
-    private void injectDependencies(Context context) {
-        DaggerWeatherPresenterComponent.builder().weatherPresenterModule(new WeatherPresenterModule(context))
-                .build().inject(this);
+    @Override
+    public void inject() {
+        Context context = view.getViewContext();
+        injectDependencies(context);
     }
-
 
     @Override
     public void loadWeather() {
@@ -97,5 +96,10 @@ public class WeatherPresenter implements WeatherContract.Presenter{
     @Override
     public void unsubscribe() {
         compositeSubscription.clear();
+    }
+
+    private void injectDependencies(Context context) {
+        DaggerWeatherPresenterComponent.builder().weatherPresenterModule(new WeatherPresenterModule(context))
+                .build().inject(this);
     }
 }

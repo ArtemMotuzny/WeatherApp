@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.artemmotuzny.weatherapp.data.WeatherRepository;
 import com.artemmotuzny.weatherapp.data.models.Weather;
+import com.artemmotuzny.weatherapp.data.remote.api.WeatherApi;
 
 import java.util.HashMap;
 import java.util.Map;

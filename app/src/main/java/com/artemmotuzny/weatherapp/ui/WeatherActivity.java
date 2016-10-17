@@ -64,7 +64,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().add(R.id.container,weatherFragment,getString(R.string.weather_fragment_tag)).commit();
 
-        new WeatherPresenter(this,weatherFragment);
+        new WeatherPresenter(weatherFragment);
     }
 
 

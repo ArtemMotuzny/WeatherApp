@@ -1,4 +1,4 @@
-package com.artemmotuzny.weatherapp.data.remote;
+package com.artemmotuzny.weatherapp.data.remote.api;
 
 
 

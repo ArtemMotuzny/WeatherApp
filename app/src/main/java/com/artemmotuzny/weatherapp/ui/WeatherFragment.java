@@ -1,5 +1,6 @@
 package com.artemmotuzny.weatherapp.ui;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,21 +24,13 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     private TextView info;
     private ImageView icon;
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragmenr_weather,container,false);
-
         info = (TextView)root.findViewById(R.id.info);
         icon = (ImageView)root.findViewById(R.id.icon);
-
-
+        presenter.inject();
         return root;
     }
 
@@ -78,5 +71,10 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     @Override
     public void setErrorText(String message) {
         info.setText(message);
+    }
+
+    @Override
+    public Context getViewContext() {
+        return getContext();
     }
 }
