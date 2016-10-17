@@ -1,5 +1,7 @@
 package com.artemmotuzny.weatherapp.data;
 
+import android.location.Location;
+
 import com.artemmotuzny.weatherapp.data.models.Weather;
 
 import rx.Observable;
@@ -9,5 +11,7 @@ import rx.Observable;
  */
 
 public interface WeatherRepository{
-    Observable<Weather> getWeather();
+    Observable<Weather> getWeatherByLocation(Location location);
+
+    void saveWeather(Weather weather);
 }

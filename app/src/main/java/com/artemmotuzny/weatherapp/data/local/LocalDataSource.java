@@ -4,8 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.artemmotuzny.weatherapp.data.WeatherRepository;
 import com.artemmotuzny.weatherapp.data.models.Clouds;
 import com.artemmotuzny.weatherapp.data.models.Coordinates;
 import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
@@ -29,23 +31,19 @@ import rx.schedulers.Schedulers;
  * Created by tema_ on 13.10.2016.
  */
 
-public class DataBase {
+public class LocalDataSource implements WeatherRepository{
     private BriteDatabase dataBaseHelper;
 
-    public DataBase(@NonNull Context context) {
+    public LocalDataSource(@NonNull Context context) {
         DBHelper dbHelper = new DBHelper(context);
         SqlBrite sqlBrite = SqlBrite.create();
         dataBaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
     }
 
     //get observables
-    public Observable<Weather> getWeatherByLocation(double latitude, double longitude) {
-        return getCoordByWeatherDataId(latitude, longitude).doOnError(new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-
-            }
-        }).flatMap(new Func1<Coordinates, Observable<Weather>>() {
+    @Override
+    public Observable<Weather> getWeatherByLocation(Location location) {
+        return getCoordByWeatherDataId(location.getLatitude(), location.getLongitude()).flatMap(new Func1<Coordinates, Observable<Weather>>() {
             @Override
             public Observable<Weather> call(final Coordinates coordinates) {
                 long id = coordinates.getWeatherDataId();
@@ -115,15 +113,9 @@ public class DataBase {
         return Mapper.cursorToExpandedWeather(dataBaseHelper.query(sql, String.valueOf(id)));
     }
 
-
-
-
-
-
-
-
     //Save methods
-    public void saveWeatherData(Weather weather) {
+    @Override
+    public void saveWeather(Weather weather) {
         BriteDatabase.Transaction transaction = dataBaseHelper.newTransaction();
         try {
 
@@ -211,5 +203,6 @@ public class DataBase {
         contentValues.put(DBConstants.CoordinateEntity.LON, coordinates.getLon());
         dataBaseHelper.insert(DBConstants.CoordinateEntity.TABLE_NAME, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
     }
+
 
 }
