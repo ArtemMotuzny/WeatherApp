@@ -30,7 +30,6 @@ public class DBConstants {
 
     public static abstract class ExpandedWeatherInfoEntity implements BaseColumns{
         public static final String TABLE_NAME = "ExpandedWeatherInfoTable";
-        //TODO:re
         public static final String EXPANDED_WEATHER_ID = "expanded_weather_id";
         public static final String MAIN = "my_main";
         public static final String DESCRIPTION = "description";
