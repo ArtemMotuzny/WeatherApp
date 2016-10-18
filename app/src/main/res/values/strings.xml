@@ -12,7 +12,7 @@
     <string name="weather_fragment_tag">WeatherFragmenr</string>
     <string name="error_data">К сожалению данные не обнаружены</string>
     <string name="colon">: </string>
-    <string name="temp">\nТемпиратура: </string>
+    <string name="temp">\nТемпература: </string>
     <string name="coma">, </string>
     <string name="cloudiness">\nОбласность: </string>
 </resources>

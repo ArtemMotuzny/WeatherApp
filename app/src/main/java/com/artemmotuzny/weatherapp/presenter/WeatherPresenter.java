@@ -52,12 +52,9 @@ public class WeatherPresenter implements WeatherContract.Presenter{
 
     @Override
     public void loadWeather() {
-        Subscription subscription = locationApi.getLocation().flatMap(new Func1<Location, Observable<Weather>>() {
-            @Override
-            public Observable<Weather> call(Location location) {
-                return weatherRepository.getWeatherByLocation(location);
-            }
-        }).subscribeOn(Schedulers.computation())
+        Subscription subscription = locationApi.getLocation()
+                .flatMap(location -> weatherRepository.getWeatherByLocation(location))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Weather>() {
                     @Override
@@ -72,7 +69,6 @@ public class WeatherPresenter implements WeatherContract.Presenter{
                         }else {
                             view.setErrorText(e.getMessage());
                         }
-
                     }
                     @Override
                     public void onNext(Weather weather) {

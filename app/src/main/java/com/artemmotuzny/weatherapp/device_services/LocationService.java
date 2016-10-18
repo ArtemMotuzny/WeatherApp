@@ -89,8 +89,10 @@ public class LocationService implements LocationApi {
                 }
 
                 //Without looper prepare we have error(can't create handler inside thread that has not called looper.prepare())
-                Looper.prepare();
-                locationManager.requestLocationUpdates(typeProvider, 30000, 20, locationListener, Looper.myLooper());
+                if(Looper.myLooper()==null){
+                    Looper.prepare();
+                }
+                locationManager.requestLocationUpdates(typeProvider, 3000, 20, locationListener, Looper.myLooper());
                 Location location = locationManager.getLastKnownLocation(typeProvider);
                 if (location == null) {
                     subscriber.onError(new Throwable("Локация не доступна"));

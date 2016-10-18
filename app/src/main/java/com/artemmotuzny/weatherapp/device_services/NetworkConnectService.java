@@ -16,7 +16,7 @@ public class NetworkConnectService {
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
-    public boolean getConnectState(){
+    public boolean isConnected(){
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED;
     }
