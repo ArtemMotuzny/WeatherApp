@@ -4,7 +4,7 @@ package com.artemmotuzny.weatherapp.data.models;
 import com.google.gson.annotations.SerializedName;
 
 public class Coordinates {
-    transient long weatherDataId;
+    transient long dbId;
 
     @SerializedName("lon")
     private Double lon;
@@ -29,11 +29,11 @@ public class Coordinates {
         return lat;
     }
 
-    public long getWeatherDataId() {
-        return weatherDataId;
+    public long getDbId() {
+        return dbId;
     }
 
-    public void setWeatherDataId(long weatherDataId) {
-        this.weatherDataId = weatherDataId;
+    public void setDbId(long dbId) {
+        this.dbId = dbId;
     }
 }

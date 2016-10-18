@@ -62,7 +62,10 @@ public class WeatherActivity extends AppCompatActivity {
     private void initView() {
         WeatherFragment weatherFragment = new WeatherFragment();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.container,weatherFragment,getString(R.string.weather_fragment_tag)).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.container,weatherFragment,getString(R.string.weather_fragment_tag))
+                .commit();
 
         new WeatherPresenter(weatherFragment);
     }

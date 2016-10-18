@@ -13,5 +13,5 @@ import rx.Observable;
 public interface WeatherRepository{
     Observable<Weather> getWeatherByLocation(Location location);
 
-    void saveWeather(Weather weather);
+    void saveOrUpdateWeather(Weather weather);
 }

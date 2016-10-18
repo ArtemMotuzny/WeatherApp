@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.artemmotuzny.weatherapp.R;
 import com.artemmotuzny.weatherapp.event.PermissionEvent;
@@ -23,33 +24,22 @@ import rx.Subscriber;
  */
 
 public class LocationService implements LocationApi {
-    private boolean networkProvide = false;
-    private boolean gpsProvide = false;
-    private String typeProvider;
     private LocationManager locationManager;
     private Context context;
+    private LocationListener locationListener;
+
+    boolean isGpsProvide = false;
+    boolean isNetworkProvide = false;
 
     public LocationService(Context context) {
         this.context = context;
-        providerType();
-    }
-
-    private void providerType() {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        if (isCanProvideLocation()) {
-            if (gpsProvide) {
-                typeProvider = LocationManager.GPS_PROVIDER;
-            }
-            if (networkProvide&& typeProvider.isEmpty()) {
-                typeProvider = LocationManager.NETWORK_PROVIDER;
-            }
-        }
     }
 
     private boolean isCanProvideLocation() {
-        gpsProvide = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        networkProvide = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        return !(!gpsProvide && !networkProvide);
+        isGpsProvide = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkProvide = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return !(!isGpsProvide && !isNetworkProvide);
     }
 
 
@@ -60,8 +50,9 @@ public class LocationService implements LocationApi {
             public void call(final Subscriber<? super Location> subscriber) {
                 if (!isCanProvideLocation()) {
                     subscriber.onError(new Throwable("Включите gps"));
+                    return;
                 }
-                LocationListener locationListener = new LocationListener() {
+                locationListener = new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
                         subscriber.onNext(location);
@@ -74,7 +65,6 @@ public class LocationService implements LocationApi {
 
                     @Override
                     public void onProviderEnabled(String provider) {
-
                     }
 
                     @Override
@@ -87,21 +77,46 @@ public class LocationService implements LocationApi {
                     subscriber.onError(new Throwable("Permission error"));
                     return;
                 }
-
                 //Without looper prepare we have error(can't create handler inside thread that has not called looper.prepare())
-                if(Looper.myLooper()==null){
+                if (Looper.myLooper() == null) {
                     Looper.prepare();
                 }
-                locationManager.requestLocationUpdates(typeProvider, 3000, 20, locationListener, Looper.myLooper());
-                Location location = locationManager.getLastKnownLocation(typeProvider);
+                Location location = getProviderLocation(locationListener);
                 if (location == null) {
                     subscriber.onError(new Throwable("Локация не доступна"));
                     return;
                 }
                 subscriber.onNext(location);
                 Looper.loop();
-
             }
         });
+    }
+
+    private Location getProviderLocation(LocationListener locationListener) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            EventBus.getDefault().post(new PermissionEvent(context.getString(R.string.event_check)));
+            return null;
+        }
+
+        Location location = null;
+        if (isNetworkProvide) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 5, locationListener);
+            if (locationManager != null) {
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+        }
+        // if GPS Enabled get lat/long using GPS Services
+        if (isGpsProvide) {
+            if (location == null) {
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, 6000, 5, locationListener);
+                if (locationManager != null) {
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                }
+            }
+        }
+        return location;
     }
 }

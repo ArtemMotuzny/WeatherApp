@@ -24,6 +24,8 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     private TextView info;
     private ImageView icon;
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -2,7 +2,6 @@ package com.artemmotuzny.weatherapp.data;
 
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.util.Log;
 
 import com.artemmotuzny.weatherapp.device_services.NetworkConnectService;
 import com.artemmotuzny.weatherapp.data.local.LocalDataSource;
@@ -14,7 +13,6 @@ import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action1;
 
 /**
  * Created by tema_ on 13.10.2016.
@@ -50,13 +48,13 @@ public class WeatherRepositoryImpl implements WeatherRepository {
                 weather.getCoord().setLon(location.getLongitude());
 
                 //save weather to db
-                localDataSource.saveWeather(weather);
+                localDataSource.saveOrUpdateWeather(weather);
             });
         }
     }
 
     @Override
-    public void saveWeather(Weather weather) {
+    public void saveOrUpdateWeather(Weather weather) {
 
     }
 

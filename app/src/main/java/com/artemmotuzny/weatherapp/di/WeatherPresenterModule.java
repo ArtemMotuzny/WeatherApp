@@ -11,6 +11,8 @@ import com.artemmotuzny.weatherapp.data.local.LocalDataSource;
 import com.artemmotuzny.weatherapp.data.remote.RemoteDataSource;
 import com.artemmotuzny.weatherapp.data.remote.RetrofitService;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -32,7 +34,7 @@ public class WeatherPresenterModule {
         return new RemoteDataSource(RetrofitService.getApi());
     }
 
-    @Provides
+    @Provides @Singleton
     public LocalDataSource provideLocalDataSource(){
         return new LocalDataSource(context);
     }

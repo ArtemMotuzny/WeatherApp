@@ -34,6 +34,6 @@ public class RemoteDataSource implements WeatherRepository {
     }
 
     @Override
-    public void saveWeather(Weather weather) {
+    public void saveOrUpdateWeather(Weather weather) {
     }
 }

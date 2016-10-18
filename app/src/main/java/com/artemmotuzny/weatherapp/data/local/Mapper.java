@@ -1,6 +1,7 @@
 package com.artemmotuzny.weatherapp.data.local;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import com.artemmotuzny.weatherapp.data.models.Clouds;
 import com.artemmotuzny.weatherapp.data.models.Coordinates;
@@ -15,33 +16,30 @@ import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.functions.Func1;
-
 /**
  * Created by tema_ on 13.10.2016.
  */
 
 class Mapper {
-    static Func1<Cursor, Coordinates> cursorToCoordinates() {
-        return new Func1<Cursor, Coordinates>() {
-            @Override
-            public Coordinates call(Cursor cursor) {
-                Coordinates coordinates = new Coordinates();
-                coordinates.setWeatherDataId(cursor.getInt(cursor.getColumnIndex(DBConstants.CoordinateEntity.WEATHER_DATA_ID)));
-                coordinates.setLat(cursor.getDouble(cursor.getColumnIndex(DBConstants.CoordinateEntity.LAT)));
-                coordinates.setLon(cursor.getDouble(cursor.getColumnIndex(DBConstants.CoordinateEntity.LON)));
-                return coordinates;
-            }
-        };
+    static Coordinates cursorToCoordinates(Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            Coordinates coordinates = new Coordinates();
+            coordinates.setDbId(cursor.getLong(cursor.getColumnIndex(DBConstants.CoordinateEntity._ID)));
+            coordinates.setLat(cursor.getDouble(cursor.getColumnIndex(DBConstants.CoordinateEntity.LAT)));
+            coordinates.setLon(cursor.getDouble(cursor.getColumnIndex(DBConstants.CoordinateEntity.LON)));
+            cursor.close();
+            return coordinates;
+        }
+        return null;
     }
 
     static Weather cursorToWeather(Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
             Weather weather = new Weather();
+            weather.setId(cursor.getInt(cursor.getColumnIndex(DBConstants.WeatherEntity.WEATHER_ID)));
             weather.setName(cursor.getString(cursor.getColumnIndex(DBConstants.WeatherEntity.NAME)));
             weather.setData(cursor.getInt(cursor.getColumnIndex(DBConstants.WeatherEntity.DATA)));
             weather.setCod(cursor.getInt(cursor.getColumnIndex(DBConstants.WeatherEntity.COD)));
-            weather.setId(cursor.getInt(cursor.getColumnIndex(DBConstants.WeatherEntity.WEATHER_DATA_ID)));
             cursor.close();
             return weather;
         }
@@ -60,8 +58,13 @@ class Mapper {
 
     public static List<ExpandedWeatherInfo> cursorToExpandedWeather(Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
-            List<ExpandedWeatherInfo> expandedWeatherInfos = new ArrayList<>();
 
+            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.EXPANDED_WEATHER_ID)));
+            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.ICON)));
+            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.MAIN)));
+            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.DESCRIPTION)));
+
+            List<ExpandedWeatherInfo> expandedWeatherInfos = new ArrayList<>();
             while (!cursor.isAfterLast()){
                 ExpandedWeatherInfo expandedWeatherInfo = new ExpandedWeatherInfo();
                 expandedWeatherInfo.setId(cursor.getInt(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.EXPANDED_WEATHER_ID)));
