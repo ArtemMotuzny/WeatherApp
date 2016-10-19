@@ -22,6 +22,8 @@ public class WeatherContract {
         void setErrorText(String message);
 
         Context getViewContext();
+
+        void setErrorIcon();
     }
 
     public interface Presenter{

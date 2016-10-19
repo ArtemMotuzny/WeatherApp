@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.artemmotuzny.weatherapp.R;
 import com.artemmotuzny.weatherapp.event.PermissionEvent;
@@ -28,8 +27,8 @@ public class LocationService implements LocationApi {
     private Context context;
     private LocationListener locationListener;
 
-    boolean isGpsProvide = false;
-    boolean isNetworkProvide = false;
+    private boolean isGpsEnable = false;
+    private boolean isNetworkEnable = false;
 
     public LocationService(Context context) {
         this.context = context;
@@ -37,9 +36,9 @@ public class LocationService implements LocationApi {
     }
 
     private boolean isCanProvideLocation() {
-        isGpsProvide = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkProvide = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        return !(!isGpsProvide && !isNetworkProvide);
+        isGpsEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return !(!isGpsEnable && !isNetworkEnable);
     }
 
 
@@ -49,7 +48,7 @@ public class LocationService implements LocationApi {
             @Override
             public void call(final Subscriber<? super Location> subscriber) {
                 if (!isCanProvideLocation()) {
-                    subscriber.onError(new Throwable("Включите gps"));
+                    subscriber.onError(new Throwable("Включите gps и перезапустите приложение"));
                     return;
                 }
                 locationListener = new LocationListener() {
@@ -88,6 +87,7 @@ public class LocationService implements LocationApi {
                 }
                 subscriber.onNext(location);
                 Looper.loop();
+
             }
         });
     }
@@ -98,19 +98,20 @@ public class LocationService implements LocationApi {
             return null;
         }
 
+        //if Network Enabled get lat/long using Network Provider
         Location location = null;
-        if (isNetworkProvide) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 5, locationListener);
+        if (isNetworkEnable) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 5, locationListener);
             if (locationManager != null) {
                 location = locationManager
                         .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             }
         }
-        // if GPS Enabled get lat/long using GPS Services
-        if (isGpsProvide) {
+        // if GPS Enabled get lat/long using GPS Provider
+        if (isGpsEnable) {
             if (location == null) {
                 locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER, 6000, 5, locationListener);
+                        LocationManager.GPS_PROVIDER, 3000, 5, locationListener);
                 if (locationManager != null) {
                     location = locationManager
                             .getLastKnownLocation(LocationManager.GPS_PROVIDER);

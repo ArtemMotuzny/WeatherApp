@@ -79,4 +79,9 @@ public class WeatherFragment extends Fragment implements WeatherContract.View{
     public Context getViewContext() {
         return getContext();
     }
+
+    @Override
+    public void setErrorIcon() {
+        icon.setImageResource(R.drawable.ic_error_outline_black_24px);
+    }
 }

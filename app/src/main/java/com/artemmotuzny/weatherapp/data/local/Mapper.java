@@ -59,11 +59,6 @@ class Mapper {
     public static List<ExpandedWeatherInfo> cursorToExpandedWeather(Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
 
-            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.EXPANDED_WEATHER_ID)));
-            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.ICON)));
-            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.MAIN)));
-            Log.d("MAPPER", String.valueOf(cursor.getColumnIndex(DBConstants.ExpandedWeatherInfoEntity.DESCRIPTION)));
-
             List<ExpandedWeatherInfo> expandedWeatherInfos = new ArrayList<>();
             while (!cursor.isAfterLast()){
                 ExpandedWeatherInfo expandedWeatherInfo = new ExpandedWeatherInfo();

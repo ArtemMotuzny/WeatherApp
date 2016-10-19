@@ -66,6 +66,7 @@ public class WeatherPresenter implements WeatherContract.Presenter {
                         } else {
                             view.setErrorText(e.getMessage());
                         }
+                        view.setErrorIcon();
                     }
 
                     @Override

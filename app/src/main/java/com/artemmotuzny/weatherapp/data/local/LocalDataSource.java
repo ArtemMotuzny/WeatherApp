@@ -23,6 +23,7 @@ import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Func1;
 
 /**
@@ -62,7 +63,7 @@ public class LocalDataSource implements WeatherRepository {
                 weather.setWind(wind);
 
                 database.close();
-                return Observable.just(weather);
+                return Observable.create(subscriber -> subscriber.onNext(weather));
             }
         });
     }
@@ -118,7 +119,7 @@ public class LocalDataSource implements WeatherRepository {
 
         database.beginTransaction();
         try {
-            long id = dbIsContaineredWeather(weather.getId());
+            long id = dbIsContainsWeather(weather.getId());
             if (id == -1) {
                 saveWeather(weather);
             } else {
@@ -131,7 +132,7 @@ public class LocalDataSource implements WeatherRepository {
         }
     }
 
-    private long dbIsContaineredWeather(Integer weatherId) {
+    private long dbIsContainsWeather(Integer weatherId) {
         String sql = "SELECT " + DBConstants.WeatherEntity._ID + " FROM " + DBConstants.WeatherEntity.TABLE_NAME + " WHERE " + DBConstants.WeatherEntity.WEATHER_ID + " = ?";
         Cursor cursor = database.rawQuery(sql, new String[]{String.valueOf(weatherId)});
         if (cursor.getCount() > 0) {
