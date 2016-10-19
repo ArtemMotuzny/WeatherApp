@@ -19,11 +19,9 @@ import com.artemmotuzny.weatherapp.data.models.Weather;
 import com.artemmotuzny.weatherapp.data.models.Wind;
 import com.artemmotuzny.weatherapp.utils.BitmapUtils;
 
-
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Func1;
 
 /**

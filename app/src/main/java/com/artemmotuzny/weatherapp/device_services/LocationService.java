@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 
 import com.artemmotuzny.weatherapp.R;
 import com.artemmotuzny.weatherapp.event.PermissionEvent;
+import com.artemmotuzny.weatherapp.event.SubscribeEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -54,7 +55,11 @@ public class LocationService implements LocationApi {
                 locationListener = new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
-                        subscriber.onNext(location);
+                        if(!subscriber.isUnsubscribed()){
+                            subscriber.onNext(location);
+                        }else {
+                            EventBus.getDefault().post(new SubscribeEvent());
+                        }
                     }
 
                     @Override

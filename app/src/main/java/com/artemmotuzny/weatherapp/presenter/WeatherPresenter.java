@@ -10,6 +10,11 @@ import com.artemmotuzny.weatherapp.data.models.ExpandedWeatherInfo;
 import com.artemmotuzny.weatherapp.data.models.Weather;
 import com.artemmotuzny.weatherapp.di.DaggerWeatherPresenterComponent;
 import com.artemmotuzny.weatherapp.di.WeatherPresenterModule;
+import com.artemmotuzny.weatherapp.event.SubscribeEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -83,14 +88,23 @@ public class WeatherPresenter implements WeatherContract.Presenter {
         compositeSubscription.add(subscription);
     }
 
+
+
     @Override
     public void subscribe() {
+        EventBus.getDefault().register(this);
         loadWeather();
     }
 
     @Override
     public void unsubscribe() {
+        EventBus.getDefault().unregister(this);
         compositeSubscription.clear();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSubbscribeEvent(SubscribeEvent e){
+        loadWeather();
     }
 
     private void injectDependencies(Context context) {
